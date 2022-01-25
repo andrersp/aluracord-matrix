@@ -1,6 +1,7 @@
 // Component React
 
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
+import Head from 'next/head';
 
 import appConfig from '../config.json';
 
@@ -75,6 +76,10 @@ export default function PaginaInicial() {
 
     return (
         <>
+            <Head>
+                <title>Andre RSP</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
             <GlobalStyle />
             <Box
                 styleSheet={{
