@@ -3,40 +3,16 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import Head from 'next/head';
 
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+
 import appConfig from '../config.json';
 
-function GlobalStyle() {
-    return (
-        <style global jsx>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          list-style: none;
-        }
-        body {
-          font-family: 'Open Sans', sans-serif;
-        }
-        /* App fit Height */ 
-        html, body, #__next {
-          min-height: 100vh;
-          display: flex;
-          flex: 1;
-        }
-        #__next {
-          flex: 1;
-        }
-        #__next > * {
-          flex: 1;
-        }
-        /* ./App fit Height */ 
-      `}</style>
-    );
-}
+
 
 
 function Title(props) {
-    console.log(props)
+    // console.log(props)
     const Tag = props.tag || 'h1';
     return (
         <>
@@ -72,7 +48,10 @@ function Title(props) {
 
 
 export default function PaginaInicial() {
-    const username = 'andrersp';
+    // const username = 'andrersp';
+    const [username, setUsername] = useState('andrersp')
+    const roteamento = useRouter();
+
 
     return (
         <>
@@ -80,7 +59,7 @@ export default function PaginaInicial() {
                 <title>Andre RSP</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <GlobalStyle />
+
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -107,6 +86,12 @@ export default function PaginaInicial() {
                     {/* Formulário */}
                     <Box
                         as="form"
+                        onSubmit={function (event) {
+                            event.preventDefault();
+                            console.log("Alguém submeteu o form")
+                            // window.location.href = "/chat";
+                            roteamento.push('/chat')
+                        }}
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                             width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -118,6 +103,11 @@ export default function PaginaInicial() {
                         </Text>
 
                         <TextField
+                            value={username}
+                            onChange={function handler(event) {
+                                const valor = event.target.value;
+                                setUsername(valor)
+                            }}
                             fullWidth
                             textFieldColors={{
                                 neutral: {
