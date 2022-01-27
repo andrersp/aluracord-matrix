@@ -1,7 +1,7 @@
 // Component React
 
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
-import Head from 'next/head';
+
 
 import { useState } from 'react'
 import { useRouter } from 'next/router'
@@ -52,20 +52,18 @@ export default function PaginaInicial() {
     const [username, setUsername] = useState('andrersp')
     const roteamento = useRouter();
 
+    const onChangeHandler = event => {
+        setUsername(event.target.value)
+    }
+
 
     return (
         <>
-            <Head>
-                <title>Andre RSP</title>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            </Head>
+
 
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    backgroundColor: appConfig.theme.colors.primary['500'],
-                    backgroundImage: 'url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)',
-                    backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                 }}
             >
                 <Box
@@ -73,13 +71,14 @@ export default function PaginaInicial() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
+                        opacity: '0.9',
                         flexDirection: {
                             xs: 'column',
                             sm: 'row',
                         },
                         width: '100%', maxWidth: '700px',
                         borderRadius: '5px', padding: '32px', margin: '16px',
-                        boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
+                        boxShadow: '0 5px 10px 5px rgb(255 255 0 / 20%)',
                         backgroundColor: appConfig.theme.colors.neutrals[700],
                     }}
                 >
@@ -104,10 +103,7 @@ export default function PaginaInicial() {
 
                         <TextField
                             value={username}
-                            onChange={function handler(event) {
-                                const valor = event.target.value;
-                                setUsername(valor)
-                            }}
+                            onChange={onChangeHandler}
                             fullWidth
                             textFieldColors={{
                                 neutral: {
@@ -150,6 +146,7 @@ export default function PaginaInicial() {
                         }}
                     >
                         <Image
+
                             styleSheet={{
                                 borderRadius: '50%',
                                 marginBottom: '16px',
