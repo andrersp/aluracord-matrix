@@ -1,27 +1,59 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import appConfig from '../config.json';
+import { createClient } from '@supabase/supabase-js'
+
+const SUPABASE_URL = process.env.SUPABASE_URL
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+
+
+
+
 
 export default function ChatPage() {
 
     const [mensagem, setMensagem] = useState('')
     const [listMensagem, setlistaMensagem] = useState([])
 
+    useEffect(() => {
+        const dadosSupaBase = supabaseClient
+            .from('mensagens')
+            .select('*')
+            .order('id', { ascending: false })
+            .then(({ data }) => {
+                // console.log(data);
+                setlistaMensagem(data)
+            });
+
+    }, [])
+
+
+
     const handleNovaMensagem = (novaMensagem) => {
         const mensagem = {
-            id: listMensagem.length + 1,
             de: 'andrersp',
-            mensage: novaMensagem,
+            texto: novaMensagem,
 
 
         }
-        // console.log(novaMensagem);
-        setlistaMensagem([
+        supabaseClient.from('mensagens').insert([mensagem])
+            .then(({ data }) => {
+                // console.log(oquevem)
+                setlistaMensagem([
 
-            mensagem,
-            ...listMensagem
-        ]);
+                    data[0],
+                    ...listMensagem
+                ]);
+            })
+        // console.log(novaMensagem);
+        // setlistaMensagem([
+
+        //     mensagem,
+        //     ...listMensagem
+        // ]);
     }
     // Sua lógica vai aqui
     //Usuario
@@ -210,7 +242,7 @@ function MessageList(props) {
                             </Text>
                         </Box>
                         {/* {console.log(mensagem.message)} */}
-                        {mensagem.mensage}
+                        {mensagem.texto}
                     </Text>
                 )
 

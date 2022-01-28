@@ -9,11 +9,17 @@ import { useRouter } from 'next/router'
 import appConfig from '../config.json';
 
 
+// const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY
+const SUPABASE_URL = process.env.SUPABASE_URL
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY
+
+
 
 
 function Title(props) {
     // console.log(props)
     const Tag = props.tag || 'h1';
+
     return (
         <>
             <Tag>{props.children}</Tag>
