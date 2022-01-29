@@ -3,20 +3,52 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/router'
+
+import { ButtonSendSticker } from '../src/components/ButtonSendStriker'
 
 const SUPABASE_URL = process.env.SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 
+function escutaMesnagemEmTempoReal(addMensagem) {
+    return supabaseClient
+        .from('mensagens')
+        .on('INSERT', (respostaLive) => {
+            console.log({ respostaLive });
+            console.log("Nova Mensagem")
+            addMensagem(respostaLive.new)
+        })
+        .subscribe()
+
+}
+
 
 
 
 
 export default function ChatPage() {
+    const roteamento = useRouter();
+    const usuarioLogado = roteamento.query.username
+    // console.log(usuarioLogado)
+    // console.log(roteamento.query)
 
     const [mensagem, setMensagem] = useState('')
-    const [listMensagem, setlistaMensagem] = useState([])
+    const [listMensagem, setlistaMensagem] = useState([
+        // {
+        //     id: 1,
+        //     de: "andrersp",
+        //     texto: ":sticker:https://www.alura.com.br/imersao-react-4/assets/figurinhas/Figurinha_3.png"
+
+        // },
+        // {
+        //     id: 2,
+        //     de: "andrersp",
+        //     texto: "Uma mensagem de texto"
+
+        // }
+    ])
 
     useEffect(() => {
         const dadosSupaBase = supabaseClient
@@ -27,6 +59,18 @@ export default function ChatPage() {
                 // console.log(data);
                 setlistaMensagem(data)
             });
+        escutaMesnagemEmTempoReal((nomeMensagem) => {
+            console.log(nomeMensagem)
+            setlistaMensagem((valorAtualDaLista) => {
+                return [
+
+                    nomeMensagem,
+                    ...valorAtualDaLista
+                ]
+
+            });
+            // handleNovaMensagem(nomeMensagem)
+        });
 
     }, [])
 
@@ -34,20 +78,23 @@ export default function ChatPage() {
 
     const handleNovaMensagem = (novaMensagem) => {
         const mensagem = {
-            de: 'andrersp',
+            de: usuarioLogado,
             texto: novaMensagem,
 
 
         }
+        console.log(mensagem)
         supabaseClient.from('mensagens').insert([mensagem])
             .then(({ data }) => {
+                console.log(data)
                 // console.log(oquevem)
-                setlistaMensagem([
+                // setlistaMensagem([
 
-                    data[0],
-                    ...listMensagem
-                ]);
-            })
+                //     data[0],
+                //     ...listMensagem
+                // ]);
+            });
+        setMensagem('');
         // console.log(novaMensagem);
         // setlistaMensagem([
 
@@ -137,7 +184,7 @@ export default function ChatPage() {
 
                                         event.preventDefault()
                                         handleNovaMensagem(mensagem)
-                                        setMensagem('')
+                                        // setMensagem('')
 
 
                                     }
@@ -157,6 +204,11 @@ export default function ChatPage() {
 
                                 }}
                             />
+                            <ButtonSendSticker
+                                onStickerClick={(sticker) => {
+                                    // console.log("salva o componente no DB", sticker)
+                                    handleNovaMensagem(`:sticker:${sticker}`)
+                                }} />
                         </Box>
                     </Box>
                 </Box>
@@ -241,8 +293,14 @@ function MessageList(props) {
                                 {(new Date().toLocaleDateString())}
                             </Text>
                         </Box>
+                        {/* {mensagem.texto.startsWith(':sticker:').toString()} */}
+                        {mensagem.texto.startsWith(':sticker:') ? (
+                            <Image src={mensagem.texto.replace(":sticker:", '')} width='120' />
+                        ) :
+                            (mensagem.texto)
+                        }
                         {/* {console.log(mensagem.message)} */}
-                        {mensagem.texto}
+                        {/* {mensagem.texto} */}
                     </Text>
                 )
 

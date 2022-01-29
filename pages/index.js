@@ -10,8 +10,7 @@ import appConfig from '../config.json';
 
 
 // const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY
-const SUPABASE_URL = process.env.SUPABASE_URL
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY
+
 
 
 
@@ -55,7 +54,7 @@ function Title(props) {
 
 export default function PaginaInicial() {
     // const username = 'andrersp';
-    const [username, setUsername] = useState('andrersp')
+    const [username, setUsername] = useState('')
     const roteamento = useRouter();
 
     const onChangeHandler = event => {
@@ -95,7 +94,7 @@ export default function PaginaInicial() {
                             event.preventDefault();
                             console.log("Alguém submeteu o form")
                             // window.location.href = "/chat";
-                            roteamento.push('/chat')
+                            roteamento.push(`/chat?username=${username}`)
                         }}
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -109,6 +108,7 @@ export default function PaginaInicial() {
 
                         <TextField
                             value={username}
+                            placeholder='GitHub Username'
                             onChange={onChangeHandler}
                             fullWidth
                             textFieldColors={{
